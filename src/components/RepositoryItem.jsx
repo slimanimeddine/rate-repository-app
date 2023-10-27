@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
 		flexWrap: 'wrap',
+		flexShrink: 1,
 		gap: 10,
 	},
 	bigText: {
@@ -25,6 +26,11 @@ const styles = StyleSheet.create({
 	mediumText: {
 		fontSize: 16,
 		color: 'gray',
+	},
+	description: {
+		fontSize: 16,
+		color: 'gray',
+		flexShrink: 1
 	},
 	language: {
 		backgroundColor: 'blue',
@@ -53,12 +59,12 @@ const styles = StyleSheet.create({
 });
 
 const formatNumber = (number) => {
-  if (number >= 1000) {
-    return (number / 1000).toFixed(1) + "k";
-  } else {
-    return number.toString();
-  }
-}
+	if (number >= 1000) {
+		return (number / 1000).toFixed(1) + 'k';
+	} else {
+		return number.toString();
+	}
+};
 
 const StatItem = ({ name, value }) => {
 	return (
@@ -99,14 +105,21 @@ const RepositoryItem = ({ item }) => {
 				/>
 				<View style={styles.topViewRightItem}>
 					<Text style={styles.bigText}>{item.fullName}</Text>
-					<Text style={styles.mediumText}>{item.description}</Text>
+					<View style={{ flexDirection: 'row' }}>
+						<Text style={styles.description}>{item.description}</Text>
+					</View>
 					<Text style={styles.language}>{item.language}</Text>
 				</View>
 			</View>
 			<FlatList
 				data={itemStats}
 				style={styles.bottomView}
-				renderItem={({ item }) => <StatItem name={item.name} value={item.value} />}
+				renderItem={({ item }) => (
+					<StatItem
+						name={item.name}
+						value={item.value}
+					/>
+				)}
 				keyExtractor={(item) => item.name}
 			/>
 		</View>
