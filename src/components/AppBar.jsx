@@ -38,25 +38,7 @@ const AppBar = () => {
 					<Text style={styles.pressable}>Repositories</Text>
 				</Pressable>
 				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
-				</Link>
-				<Link to='/sign-in'>
-					<Text style={styles.signIn}>Sign in</Text>
+					<Text style={styles.pressable}>Sign in</Text>
 				</Link>
 			</ScrollView>
 		</View>
