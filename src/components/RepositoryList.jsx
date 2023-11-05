@@ -1,71 +1,84 @@
-import { FlatList, View, StyleSheet } from 'react-native';
-import RepositoryItem from './RepositoryItem';
+import { FlatList, View, StyleSheet, Text } from "react-native";
+import useRepositories from "../hooks/useRepositories";
+import SortPicker from "./SortPicker";
+import RepositoryItem from "./RepositoryItem ";
+import { memo, useState } from "react";
+import { Search } from "./Search";
+import { useDebounce } from "use-debounce";
 
 const styles = StyleSheet.create({
 	separator: {
 		height: 10,
-		backgroundColor: '#E5E4E2'
 	},
 });
 
-const repositories = [
-	{
-		id: 'jaredpalmer.formik',
-		fullName: 'jaredpalmer/formik',
-		description: 'Build forms in React, without the tears',
-		language: 'TypeScript',
-		forksCount: 1589,
-		stargazersCount: 21553,
-		ratingAverage: 88,
-		reviewCount: 4,
-		ownerAvatarUrl: 'https://avatars2.githubusercontent.com/u/4060187?v=4',
-	},
-	{
-		id: 'rails.rails',
-		fullName: 'rails/rails',
-		description: 'Ruby on Rails',
-		language: 'Ruby',
-		forksCount: 18349,
-		stargazersCount: 45377,
-		ratingAverage: 100,
-		reviewCount: 2,
-		ownerAvatarUrl: 'https://avatars1.githubusercontent.com/u/4223?v=4',
-	},
-	{
-		id: 'django.django',
-		fullName: 'django/django',
-		description: 'The Web framework for perfectionists with deadlines.',
-		language: 'Python',
-		forksCount: 21015,
-		stargazersCount: 48496,
-		ratingAverage: 73,
-		reviewCount: 5,
-		ownerAvatarUrl: 'https://avatars2.githubusercontent.com/u/27804?v=4',
-	},
-	{
-		id: 'reduxjs.redux',
-		fullName: 'reduxjs/redux',
-		description: 'Predictable state container for JavaScript apps',
-		language: 'TypeScript',
-		forksCount: 13902,
-		stargazersCount: 52869,
-		ratingAverage: 0,
-		reviewCount: 0,
-		ownerAvatarUrl: 'https://avatars3.githubusercontent.com/u/13142323?v=4',
-	},
-];
-
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
+export const RepositoryListContainer = ({
+	repositories,
+	selected,
+	setSelected,
+	fetchMore,
+}) => {
+	const repositoryNodes = repositories
+		? repositories.edges.map((edge) => edge.node)
+		: [];
+
 	return (
-		<FlatList
-			data={repositories}
-			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({ item }) => <RepositoryItem item={item} />}
-			keyExtractor={(item) => item.id}
-		/>
+		<>
+			<FlatList
+				ListHeaderComponent={
+					<SortPicker selected={selected} setSelected={setSelected} />
+				}
+				data={repositoryNodes}
+				ItemSeparatorComponent={ItemSeparator}
+				renderItem={({ item, index }) => (
+					<RepositoryItem item={item} key={index}></RepositoryItem>
+				)}
+				onEndReached={() => {
+					fetchMore();
+				}}
+				onEndReachedThreshold={0.5}
+			/>
+		</>
 	);
 };
 
-export default RepositoryList;
+const RepositoryList = ({ search }) => {
+	const [selected, setSelected] = useState("LATEST");
+
+	const [debouncedSearch] = useDebounce(search, 500);
+
+	const { repositories, loading, fetchMore } = useRepositories(
+		selected,
+		debouncedSearch
+	);
+
+	if (loading) {
+		return <></>;
+	}
+
+	return (
+		<>
+			<RepositoryListContainer
+				repositories={repositories}
+				selected={selected}
+				setSelected={setSelected}
+				fetchMore={fetchMore}
+			/>
+		</>
+	);
+};
+
+const RepositoryView = () => {
+	const [search, setSearch] = useState("");
+
+	return (
+		<>
+			<Search search={search} setSearch={setSearch} />
+			<RepositoryList search={search} />
+		</>
+	);
+};
+
+export default RepositoryView;
