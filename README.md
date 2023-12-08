@@ -9,5 +9,3 @@ Welcome to Part 10 of the Full Stack Open course, where I delve into the realm o
 To verify my successful completion of Part 10 in the Full Stack Open course and view the certificate, please visit the following URL:
 
 [Full Stack Open Certificate](https://studies.cs.helsinki.fi/stats/api/certificate/fs-react-native-2020/en/d3f01fb6818099276966062facdb6479)
-
-Stay tuned for more details on how to navigate and use the React Native applications within this repository. Happy coding!
